@@ -6,6 +6,7 @@ class BaseController
   {
     echo "index";
   }
+
   public function install()
   {
     echo View::CreateView('welcome::welcome');
@@ -20,7 +21,7 @@ class BaseController
         $db = htmlspecialchars($_POST['db']);
       }
 
-      if(!empty($host) && !empty($user) && !empty($pass) && !empty($db))
+      if(!empty($host) && !empty($user) && !empty($pass) && !empty($db) && mysqli_connect($host, $user, $pass, $db))
       {
         $content = "
 <?php
@@ -30,9 +31,10 @@ define ('PASS','" . $pass . "');
 define ('DB','" . $db . "');
 ";
         file_put_contents(DBCONFIG, $content);
-        echo View::CreateView('welcome::step2');
-      }
-      else {
+        $view = View::CreateView('welcome::step2');
+        print $view;
+        die;
+      } else {
         echo View::CreateView('welcome::failedInstallation');
       }
   }
